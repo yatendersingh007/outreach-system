@@ -1,0 +1,29 @@
+[Unit]
+Description=X Analyst Outreach Telegram bot (Workflow A)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Non-root service account (create with: adduser --system --group outreach)
+User=outreach
+Group=outreach
+WorkingDirectory=/opt/outreach-system
+EnvironmentFile=/opt/outreach-system/.env
+# Clear any lock left by a crashed/killed process BEFORE starting, so the bot
+# never boots 'permanently in progress'. Idempotent; exits 0.
+ExecStartPre=/opt/outreach-system/.venv/bin/python -m src.clear_locks
+ExecStart=/opt/outreach-system/.venv/bin/python -m src.approval.telegram_queue
+Restart=on-failure
+RestartSec=5
+# One poller only: systemd runs a single instance, and the DB heartbeat lock
+# (system_flags.poller_lock) refuses any second instance. Do not add more units.
+KillSignal=SIGINT
+TimeoutStopSec=30
+# Light hardening
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

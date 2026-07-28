@@ -1,0 +1,42 @@
+# Secrets - NEVER commit
+.env
+credentials.json
+token.json
+*.token
+client_secret*.json
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Owner-provided data assets (kept local; proprietary)
+assets/*.pdf
+templates/*.txt
+templates/*.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+.env
+.env.*
+!.env.example
+token.json
+credentials.json
+.venv/
+.vscode/
+.pytest_cache/
+__pycache__/
+*.pyc
+generated_decks/
+*.log
+
+node_modules/
+*.log

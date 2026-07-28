@@ -1,0 +1,29 @@
+# Postgres only. Hermes (Telegram dispatcher) is installed separately.
+# NOTE: In this test environment a local Postgres is already running on :5432,
+# so this compose file is optional. Use it on a clean machine / the VPS.
+#
+#   docker compose up -d
+#   # then apply schema:
+#   docker compose exec -T postgres psql -U postgres -d outreach < schema.sql
+#
+services:
+  postgres:
+    image: postgres:16
+    container_name: outreach-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: outreach
+    ports:
+      - "5432:5432"
+    volumes:
+      - outreach_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d outreach"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  outreach_pgdata:
